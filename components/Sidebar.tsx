@@ -3,7 +3,7 @@
 import type { Facility } from '@/lib/supabase'
 
 export default function Sidebar({ facilities, currentView, setCurrentView, setSelectedRegion }: any) {
-  const regions = Array.from(new Set(facilities.map((f: Facility) => f.region)))
+  const regions: string[] = Array.from(new Set(facilities.map((f: Facility) => f.region)))
 
   return (
     <aside className="sidebar">
