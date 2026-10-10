@@ -10,9 +10,9 @@ export default function LookupView({ facilities, currentUser, setCurrentView, se
   const [filterRecruiting, setFilterRecruiting] = useState('')
   const [filterOnboarding, setFilterOnboarding] = useState('')
 
-  const states = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.region))), [facilities])
-  const systems = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.health_system))), [facilities])
-  const specialties = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.specialty))), [facilities])
+  const states = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.region))) as string[], [facilities])
+  const systems = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.health_system))) as string[], [facilities])
+  const specialties = useMemo(() => Array.from(new Set(facilities.map((f: Facility) => f.specialty))) as string[], [facilities])
 
   const filtered = useMemo(() => {
     return facilities.filter((f: Facility) => {
