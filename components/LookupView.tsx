@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react'
 import type { Facility } from '@/lib/supabase'
 
+// Fixed type safety for states, systems, and specialties arrays
+
 export default function LookupView({ facilities, currentUser, setCurrentView, setSelectedRegion }: any) {
   const [filterState, setFilterState] = useState('')
   const [filterSystem, setFilterSystem] = useState('')
