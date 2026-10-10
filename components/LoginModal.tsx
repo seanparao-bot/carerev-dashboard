@@ -5,10 +5,13 @@ import { useState } from 'react'
 export default function LoginModal({ onClose, onLogin, error }: any) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onLogin(username, password)
+    setLoading(true)
+    await onLogin(username, password)
+    setLoading(false)
   }
 
   return (
@@ -190,29 +193,34 @@ export default function LoginModal({ onClose, onLogin, error }: any) {
             </button>
             <button
               type="submit"
+              disabled={loading}
               style={{
                 flex: 1,
                 padding: '12px 16px',
-                background: 'linear-gradient(135deg, #1a3d5c 0%, #0f2535 100%)',
+                background: loading ? '#999' : 'linear-gradient(135deg, #1a3d5c 0%, #0f2535 100%)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
                 fontSize: '13px',
                 fontWeight: '700',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 transition: 'all 0.3s cubic-bezier(0.23, 1, 0.320, 1)',
                 boxShadow: '0 4px 12px rgba(26, 61, 92, 0.2)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 61, 92, 0.3)'
-                e.currentTarget.style.transform = 'translateY(-2px)'
+                if (!loading) {
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 61, 92, 0.3)'
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(26, 61, 92, 0.2)'
-                e.currentTarget.style.transform = 'translateY(0)'
+                if (!loading) {
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(26, 61, 92, 0.2)'
+                  e.currentTarget.style.transform = 'translateY(0)'
+                }
               }}
             >
-              Sign In
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </div>
         </form>

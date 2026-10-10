@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { generateRandomPassword } from '@/lib/auth-utils'
+import { generateRandomPassword, hashPassword } from '@/lib/auth-utils'
 
 interface User {
   id: string
@@ -50,13 +50,16 @@ export default function UsersManagement() {
 
     try {
       const password = generateRandomPassword()
+      console.log('Generated password:', password)
+      const hashedPassword = await hashPassword(password)
+      console.log('Hashed password:', hashedPassword)
       setGeneratedPassword(password)
 
       const { error } = await supabase
         .from('users')
         .insert([{
           email: newEmail,
-          password_hash: password, // In production, hash this properly on the backend
+          password_hash: hashedPassword,
           role: 'Admin',
           is_active: true,
         }])
@@ -67,6 +70,7 @@ export default function UsersManagement() {
       setShowCreateForm(false)
       await fetchUsers()
     } catch (err: any) {
+      console.error('Create admin error:', err)
       setError(err.message || 'Failed to create admin')
     }
   }
@@ -74,11 +78,12 @@ export default function UsersManagement() {
   const resetPassword = async (userId: string, email: string) => {
     try {
       const newPassword = generateRandomPassword()
+      const hashedPassword = await hashPassword(newPassword)
       setGeneratedPassword(newPassword)
 
       const { error } = await supabase
         .from('users')
-        .update({ password_hash: newPassword })
+        .update({ password_hash: hashedPassword })
         .eq('id', userId)
 
       if (error) throw error

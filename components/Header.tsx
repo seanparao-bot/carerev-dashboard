@@ -1,26 +1,51 @@
 'use client'
 
 import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
+import { verifyPassword } from '@/lib/auth-utils'
 import LoginModal from './LoginModal'
-
-const users = {
-  'admin@carerev.com': { password: 'admin123', role: 'SuperAdmin', name: 'Admin User' },
-  'regional@carerev.com': { password: 'admin123', role: 'Admin', name: 'Regional Team' },
-}
 
 export default function Header({ currentUser, onLogin, onLogout }: any) {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [loginError, setLoginError] = useState('')
 
-  const handleLogin = (username: string, password: string) => {
+  const handleLogin = async (username: string, password: string) => {
+    console.log('=== LOGIN ATTEMPT ===', username)
     setLoginError('')
-    const user = (users as any)[username]
 
-    if (user && user.password === password) {
-      onLogin({ ...user, email: username })
-      setShowLoginModal(false)
-    } else {
-      setLoginError('Invalid credentials')
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', username)
+        .single()
+
+      if (error || !data) {
+        console.error('User not found:', error)
+        setLoginError('Invalid credentials')
+        return
+      }
+
+      console.log('User found:', data.email)
+      console.log('Password hash exists:', !!data.password_hash)
+
+      const isPasswordValid = await verifyPassword(password, data.password_hash)
+      console.log('Password valid:', isPasswordValid)
+
+      if (isPasswordValid && data.is_active) {
+        onLogin({
+          id: data.id,
+          email: data.email,
+          role: data.role,
+          name: data.role === 'SuperAdmin' ? 'SuperAdmin' : 'Admin',
+        })
+        setShowLoginModal(false)
+      } else {
+        setLoginError('Invalid credentials or account inactive')
+      }
+    } catch (err) {
+      console.error('Login error:', err)
+      setLoginError('Login failed')
     }
   }
 

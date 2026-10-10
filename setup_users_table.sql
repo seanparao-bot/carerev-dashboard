@@ -12,8 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create index on email for faster lookups
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
--- Insert initial SuperAdmin (password: admin123)
--- Note: In production, change this password immediately
+-- Insert initial SuperAdmin (bcrypt hash of "admin123", rounds=10)
 INSERT INTO users (email, password_hash, role) VALUES
-  ('admin@carerev.com', '$2a$10$YIjlrPNoM3m8z.Z5Z5Z5Z.5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z', 'SuperAdmin')
+  ('admin@carerev.com', '$2b$10$0ZoKOEAkFOkgaWk4hy4c2.TGmIq7WKM.8xJLJxQfMj.D4PVfBGaKC', 'SuperAdmin')
 ON CONFLICT (email) DO NOTHING;
