@@ -7,12 +7,13 @@ import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import LookupView from '@/components/LookupView'
 import RegionalView from '@/components/RegionalView'
+import UsersManagement from '@/components/UsersManagement'
 
 export default function Home() {
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [facilities, setFacilities] = useState<Facility[]>([])
   const [loading, setLoading] = useState(true)
-  const [currentView, setCurrentView] = useState<'lookup' | 'regional'>('lookup')
+  const [currentView, setCurrentView] = useState<'lookup' | 'regional' | 'users'>('lookup')
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
 
   useEffect(() => {
@@ -93,6 +94,7 @@ export default function Home() {
           currentView={currentView}
           setCurrentView={setCurrentView}
           setSelectedRegion={setSelectedRegion}
+          currentUser={currentUser}
         />
         <div className="view-container">
           {currentView === 'lookup' ? (
@@ -102,6 +104,8 @@ export default function Home() {
               setCurrentView={setCurrentView}
               setSelectedRegion={setSelectedRegion}
             />
+          ) : currentView === 'users' ? (
+            <UsersManagement />
           ) : (
             <RegionalView
               facilities={facilities}
