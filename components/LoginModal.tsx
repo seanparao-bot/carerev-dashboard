@@ -158,8 +158,8 @@ export default function LoginModal({ onClose, onLogin, error }: any) {
             lineHeight: '1.6',
           }}>
             <strong style={{ display: 'block', marginBottom: '8px', fontSize: '13px' }}>Demo Credentials:</strong>
-            SuperAdmin: admin@carerev.com / admin123<br />
-            Admin: regional@carerev.com / admin123
+            SuperAdmin: admin@company.com / admin123<br />
+            Admin: user@company.com / (check Users page for password)
           </div>
 
           <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>

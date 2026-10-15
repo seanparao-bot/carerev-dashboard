@@ -54,7 +54,7 @@ export default function Header({ currentUser, onLogin, onLogout }: any) {
   return (
     <>
       <div className="header">
-        <div className="header-title">Main Experience Sheet & Regional Team Matrix</div>
+        <div className="header-title">Facility Management Dashboard</div>
         <div className="user-info">
           <span>{currentUser?.name}</span>
           <span className="user-badge">{currentUser?.role}</span>
