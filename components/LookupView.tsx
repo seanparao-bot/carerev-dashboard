@@ -127,9 +127,9 @@ export default function LookupView({ facilities, currentUser, setCurrentView, se
             ) : (
               filtered.map((facility: Facility) => (
                 <tr key={facility.id}>
-                  <td><strong>{facility.name}</strong></td>
-                  <td>{facility.health_system || ''}</td>
-                  <td>{facility.specialty}</td>
+                  <td><strong dangerouslySetInnerHTML={{ __html: facility.name }} /></td>
+                  <td dangerouslySetInnerHTML={{ __html: facility.health_system || '' }} />
+                  <td dangerouslySetInnerHTML={{ __html: facility.specialty }} />
                   <td style={{ textAlign: 'center' }}>
                     <span className={`checkbox-icon ${facility.recruiting ? 'checked' : 'unchecked'}`}>
                       {facility.recruiting ? '✓' : '✕'}
@@ -140,8 +140,8 @@ export default function LookupView({ facilities, currentUser, setCurrentView, se
                       {facility.onboarding ? '✓' : '✕'}
                     </span>
                   </td>
-                  <td>{facility.required_experience}</td>
-                  <td>{facility.orientation_dates || ''}</td>
+                  <td dangerouslySetInnerHTML={{ __html: facility.required_experience }} />
+                  <td dangerouslySetInnerHTML={{ __html: facility.orientation_dates || '' }} />
                   <td>
                     <button
                       onClick={() => {
