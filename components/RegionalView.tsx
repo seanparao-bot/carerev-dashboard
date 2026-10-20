@@ -107,6 +107,22 @@ export default function RegionalView({ facilities, region, currentUser, setCurre
     }
   }
 
+  const deleteRow = async (facilityId: number) => {
+    if (!confirm('Are you sure you want to delete this facility?')) return
+
+    try {
+      const { error } = await supabase
+        .from('facilities')
+        .delete()
+        .eq('id', facilityId)
+
+      if (error) throw error
+    } catch (error) {
+      console.error('Error deleting facility:', error)
+      alert('Failed to delete facility')
+    }
+  }
+
   const isAdmin = currentUser.role !== 'User'
 
   return (
@@ -249,12 +265,13 @@ export default function RegionalView({ facilities, region, currentUser, setCurre
               <th>Facility Requirements</th>
               <th>Dormancy Policy</th>
               <th>Employee Protocol</th>
+              {isEditMode && isAdmin && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={10} style={{ textAlign: 'center', padding: '32px', color: '#999' }}>
+                <td colSpan={isEditMode && isAdmin ? 11 : 10} style={{ textAlign: 'center', padding: '32px', color: '#999' }}>
                   No facilities found
                 </td>
               </tr>
@@ -315,6 +332,34 @@ export default function RegionalView({ facilities, region, currentUser, setCurre
                   <td style={isEditMode && isAdmin ? { cursor: 'pointer', background: '#fffde7' } : {}} onClick={() => handleCellClick(facility, 'current_employee_protocol')}>
                     <div dangerouslySetInnerHTML={{ __html: facility.current_employee_protocol || '' }} />
                   </td>
+                  {isEditMode && isAdmin && (
+                    <td style={{ textAlign: 'center' }}>
+                      <button
+                        onClick={() => deleteRow(facility.id)}
+                        style={{
+                          padding: '6px 10px',
+                          background: '#f44336',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = '#d32f2f'
+                          e.currentTarget.style.transform = 'scale(1.05)'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = '#f44336'
+                          e.currentTarget.style.transform = 'scale(1)'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))
             )}
